@@ -1,0 +1,52 @@
+if (isRunAlone.toBoolean()) {//切换application和library
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+android {
+    compileSdkVersion compile_sdk_version.toInteger()
+    resourcePrefix "login_"//资源前缀 如果资源名称不加该前缀 就会报红
+    defaultConfig {
+        //单独调试时设置的applicationId
+        if (isRunAlone.toBoolean()) {
+            applicationId "com.scy.component.login"
+        }
+        minSdkVersion 15
+        targetSdkVersion target_sdt_version.toInteger()
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //aRouter配置
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+    sourceSets {
+        //组件单独调试和集成调试时动态修改AndroidManifest文件
+        main {
+            if (isRunAlone.toBoolean()) {
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project (':common')
+    annotationProcessor 'com.alibaba:arouter-compiler:1.2.2'
+}
