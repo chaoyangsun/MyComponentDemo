@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.scy.component.common.utils.ToastUtil;
+import com.scy.component.commonbase.InterfaceFactory;
 import com.scy.component.login.logindata.LoginUtil;
 
 @Route(path = "/account/login")
@@ -27,6 +28,11 @@ public class LoginActivity extends AppCompatActivity {
         this.gotoexit = (Button) findViewById(R.id.goto_exit);
         this.gotologin = (Button) findViewById(R.id.goto_login);
         this.tvname = (TextView) findViewById(R.id.tv_name);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         tvname.setText(LoginUtil.getUserName());
     }
 
@@ -59,7 +65,11 @@ public class LoginActivity extends AppCompatActivity {
      * @param view
      */
     public void gotoPay(View view) {
-        ARouter.getInstance().build("/account/pay").navigation();
+        if (InterfaceFactory.getInstance().getLoginInterfaceImplement().isLogin()){
+            ARouter.getInstance().build("/pay/pay").navigation();
+        }else {
+            ToastUtil.showToast(this, "还未登录");
+        }
     }
 
 }

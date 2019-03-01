@@ -8,10 +8,11 @@ public class ToastUtil {
 
     public static void showToast(Context context, String msg){
         if (toast == null){
-            toast = new Toast(context);
+            toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+        }else {
+            toast.setText(msg);
+            toast.setDuration(Toast.LENGTH_SHORT);
         }
-        toast.setText(msg);
-        toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
 }
